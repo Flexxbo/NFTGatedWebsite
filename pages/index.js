@@ -1,20 +1,56 @@
-import { useAddress, useDisconnect, useMetamask } from "@thirdweb-dev/react";
-import { NextPage } from "next";
+import React from "react";
+import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { useLogout } from "@thirdweb-dev/react";
+import { getUser } from "../auth.config";
+import checkBalance from "../util/checkBalance";
+import styles from "../styles/Home.module.css";
 
-export default function Home() {
-  const address = useAddress();
-  const connectWithMetamask = useMetamask();
-  const disconnectWallet = useDisconnect();
-  return (
-    <div>
-      {address ? (
-        <>
-          <button onClick={disconnectWallet}>Disconnect Wallet</button>
-          <p>Your address:</p>
-        </>
-      ) : (
-        <button onClick={connectWithMetamask}>Connect with Metamask</button>
-      )}
-    </div>
+import { useAddress, useDisconnect, useMetamask } from "@thirdweb-dev/react";
+//import { NextPage } from "next";
+
+export default function Home() {}
+
+//This gets called on every request
+export async function getServerSideProps(context) {
+  const user = await getUser(context.req);
+
+  //If User is not signed in, redirect him to the login page
+  if (!user) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+  //Ensure we are able to generate an auth token using our private key instantiated SDK
+  const PRIVATE_KEY = process.env.THIRDWEB_AUTH_PRIVATE_KEY;
+  if (!PRIVATE_KEY) {
+    throw new Error("You need to add an PRIVATE_KEY environment variable.");
+  }
+
+  //Instantiate our SDK
+  const sdk = ThirdwebSDK.fromPrivateKey(
+    process.env.THIRDWEB_AUTH_PRIVATE_KEY,
+    "mumbai"
   );
+
+  //Check to see if the user has an NFT
+  const hasNFT = await checkBalance(sdk, user.address);
+
+  //If they don´t have an NFT send them back to login page
+  console.log("User", user.address, "doesn´t have an NFT! Redirecting...");
+  if (!hasNFT) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+  //If they have the NFT return the props
+  //Return the Props
+  return {
+    props: {},
+  };
 }
