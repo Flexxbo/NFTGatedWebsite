@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   env: {
-    customKey: "my-value",
+    customKey: "Hier sollen die Secrests hin?",
   },
 };
 
