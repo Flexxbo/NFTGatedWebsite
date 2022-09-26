@@ -4,12 +4,15 @@ import { useLogout } from "@thirdweb-dev/react";
 import { getUser } from "../auth.config";
 import checkBalance from "../util/checkBalance";
 import styles from "../styles/Home.module.css";
+import env from "dotenv";
+require("dotenv").config();
 
 import { useAddress, useDisconnect, useMetamask } from "@thirdweb-dev/react";
 //import { NextPage } from "next";
 
 export default function Home() {
   const logout = useLogout();
+
   return (
     <div className={styles.container}>
       <h1 className={styles.h1}>Restricted Access Page</h1>
@@ -52,7 +55,7 @@ export async function getServerSideProps(context) {
   const hasNFT = await checkBalance(sdk, user.address);
 
   //If they don´t have an NFT send them back to login page
-  console.log("User", user.address, "doesn´t have an NFT! Redirecting...");
+  console.log("User", user.address, "doesnt have an NFT! Redirecting...");
   if (!hasNFT) {
     return {
       redirect: {
