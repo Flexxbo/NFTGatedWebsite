@@ -8,7 +8,20 @@ import styles from "../styles/Home.module.css";
 import { useAddress, useDisconnect, useMetamask } from "@thirdweb-dev/react";
 //import { NextPage } from "next";
 
-export default function Home() {}
+export default function Home() {
+  const logout = useLogout();
+  return (
+    <div className={styles.container}>
+      <h1 className={styles.h1}>Restricted Access Page</h1>
+      <p className={styles.explain}>
+        Thanks for beeing a member of this community
+      </p>
+      <button className={styles.mainButton} onClick={logout}>
+        Logout
+      </button>
+    </div>
+  );
+}
 
 //This gets called on every request
 export async function getServerSideProps(context) {
