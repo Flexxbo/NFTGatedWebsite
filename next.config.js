@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   env: {
-    customKey: "e2222n?",
+    customKey: "e22223333333?",
   },
 };
 
